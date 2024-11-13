@@ -6,8 +6,10 @@ import numpy as np
 from PIL import Image
 from copy import deepcopy
 from collections import OrderedDict
-import mujoco_py
-from mujoco_py import MjViewer, MujocoException, const, MjRenderContextOffscreen
+#import mujoco_py
+#from mujoco_py import MjViewer, MujocoException, const, MjRenderContextOffscreen
+import mujoco
+from mujoco import MjModel, MjData, viewer
 
 from safety_gym.envs.world import World, Robot
 
@@ -62,9 +64,9 @@ def theta2vec(theta):
 def quat2mat(quat):
     ''' Convert Quaternion to a 3x3 Rotation Matrix using mujoco '''
     q = np.array(quat, dtype='float64')
-    m = np.zeros(9, dtype='float64')
-    mujoco_py.functions.mju_quat2Mat(m, q)
-    return m.reshape((3,3))
+    m = np.zeros((3, 3), dtype='float64')
+    mujoco.mju_quat2Mat(m, q)
+    return m
 
 
 def quat2zalign(quat):
