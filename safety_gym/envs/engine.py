@@ -17,7 +17,7 @@ import sys
 # Distinct colors for different types of objects.
 # For now this is mostly used for visualization.
 # This also affects the vision observation, so if training from pixels.
-COLOR_BOX = np.array([1, 1, 0, 1])
+COLOR_BOX =  np.array([1, 1, 0, 1])
 COLOR_BUTTON = np.array([1, .5, 0, 1])
 COLOR_GOAL = np.array([0, 1, 0, 1])
 COLOR_VASE = np.array([0, 1, 1, 1])
