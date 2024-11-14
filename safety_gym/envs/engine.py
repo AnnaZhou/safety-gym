@@ -10,6 +10,8 @@ from collections import OrderedDict
 #from mujoco_py import MjViewer, MujocoException, const, MjRenderContextOffscreen
 import mujoco
 from mujoco import MjModel, MjData, viewer
+from mujoco.viewer import launch_passive
+from mujoco import FatalError as MjError
 
 from safety_gym.envs.world import World, Robot
 
