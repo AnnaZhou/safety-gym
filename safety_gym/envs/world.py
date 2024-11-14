@@ -5,8 +5,14 @@ import xmltodict
 import numpy as np
 from copy import deepcopy
 from collections import OrderedDict
-from mujoco_py import const, load_model_from_path, load_model_from_xml, MjSim, MjViewer, MjRenderContextOffscreen
-
+#from mujoco_py import const, load_model_from_path, load_model_from_xml, MjSim, MjViewer, MjRenderContextOffscreen
+import mujoco
+from mujoco import MjModel, MjData
+from mujoco import viewer as MjViewer
+from mujoco.viewer import launch_passive
+from mujoco import FatalError as MujocoException
+from mujoco import MjrContext as MjRenderContextOffscreen
+from mujoco import MjSim
 import safety_gym
 import sys
 
@@ -279,7 +285,7 @@ class World:
         # Instantiate simulator
         # print(xmltodict.unparse(self.xml, pretty=True))
         self.xml_string = xmltodict.unparse(self.xml)
-        self.model = load_model_from_xml(self.xml_string)
+        self.model = MjModel.from_xml_string(self.xml_string)
         self.sim = MjSim(self.model)
 
         # Add render contexts to newly created sim
@@ -369,7 +375,7 @@ class Robot:
     ''' Simple utility class for getting mujoco-specific info about a robot '''
     def __init__(self, path):
         base_path = os.path.join(BASE_DIR, path)
-        self.sim = MjSim(load_model_from_path(base_path))
+        self.sim = MjSim(MjModel.from_xml_path(base_path))
         self.sim.forward()
 
         # Needed to figure out z-height of free joint of offset body
