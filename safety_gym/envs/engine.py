@@ -839,8 +839,12 @@ class Engine(gym.Env, gym.utils.EzPickle):
         self.world_config_dict['geoms']['goal']['pos'][:2] = self.layout['goal']
         #self.world.rebuild(deepcopy(self.world_config_dict))
         #self.update_viewer_sim = True
-        goal_body_id = self.sim.model.body_name2id('goal')
-        self.sim.model.body_pos[goal_body_id][:2] = self.layout['goal']
+
+        #goal_body_id = self.sim.model.body_name2id('goal')
+        #self.sim.model.body_pos[goal_body_id][:2] = self.layout['goal']
+        goal_body_id = mujoco.mj_name2id(self.sim.model, mujoco.mjtObj.mjOBJ_BODY, 'goal')
+        self.sim.model.body_pos[goal_body_id][:2] = self.sim.layout['goal']
+
         self.sim.forward()
 
     def build_goal_button(self):
