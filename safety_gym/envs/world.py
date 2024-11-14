@@ -6,12 +6,13 @@ import numpy as np
 from copy import deepcopy
 from collections import OrderedDict
 import mujoco
-from mujoco import MjModel, MjData
+from mujoco import MjModel
 from mujoco import viewer as MjViewer
 from mujoco.viewer import launch_passive
 from mujoco import FatalError as MujocoException
 from mujoco import MjrContext as MjRenderContextOffscreen
 from mujoco import MjData as MjSim
+from mujoco import mj_name2id, mjtObjType
 import safety_gym
 import sys
 
