@@ -285,7 +285,7 @@ class World:
         # print(xmltodict.unparse(self.xml, pretty=True))
         self.xml_string = xmltodict.unparse(self.xml)
         self.model = MjModel.from_xml_string(self.xml_string)
-        self.sim = MjSim(self.model)
+        self.sim = MjData(self.model)
 
         # Add render contexts to newly created sim
         if self.render_context is None and self.observe_vision:
@@ -297,7 +297,8 @@ class World:
             self.render_context.update_sim(self.sim)
 
         # Recompute simulation intrinsics from new position
-        self.sim.mj_forward()
+        #self.sim.mj_forward()
+        mj_forward(self.model, self.sim)
 
     def rebuild(self, config={}, state=True):
         ''' Build a new sim from a model if the model changed '''
@@ -309,7 +310,8 @@ class World:
         self.build()
         if state:
             self.sim.set_state(old_state)
-        self.sim.mj_forward()
+        #self.sim.mj_forward()
+        mj_forward(self.model, self.sim)
 
     def reset(self, build=True):
         ''' Reset the world (sim is accessed through self.sim) '''
@@ -374,8 +376,12 @@ class Robot:
     ''' Simple utility class for getting mujoco-specific info about a robot '''
     def __init__(self, path):
         base_path = os.path.join(BASE_DIR, path)
-        self.sim = MjSim(MjModel.from_xml_path(base_path))
-        self.sim.mj_forward()
+        #self.sim = MjSim(MjModel.from_xml_path(base_path))
+        #self.sim.mj_forward()
+        self.model = MjModel.from_xml_path(base_path)
+        # Create a data object to store simulation state
+        self.sim = MjData(self.model)
+        mj_forward(self.model, self.sim)
 
         # Needed to figure out z-height of free joint of offset body
         self.z_height = self.sim.data.get_body_xpos('robot')[2]
