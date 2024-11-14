@@ -322,10 +322,10 @@ class World:
             # Set camera if specified
             if mode == 'human':
                 self.viewer.cam.fixedcamid = -1
-                self.viewer.cam.type = const.CAMERA_FREE
+                self.viewer.cam.type = mujoco.mjtCamera.mjCAMERA_FREE
             else:
                 self.viewer.cam.fixedcamid = self.model.camera_name2id(mode)
-                self.viewer.cam.type = const.CAMERA_FIXED
+                self.viewer.cam.type = mujoco.mjtCamera.mjCAMERA_FIXED
         if self.update_viewer_sim:
             self.viewer.update_sim(self.sim)
             self.update_viewer_sim = False
@@ -392,23 +392,23 @@ class Robot:
             id = self.sim.model.sensor_name2id(name)
             self.sensor_dim[name] = self.sim.model.sensor_dim[id]
             sensor_type = self.sim.model.sensor_type[id]
-            if self.sim.model.sensor_objtype[id] == const.OBJ_JOINT:
+            if self.sim.model.sensor_objtype[id] == mujoco.mjtObj.mjOBJ_JOINT:
                 joint_id = self.sim.model.sensor_objid[id]
                 joint_type = self.sim.model.jnt_type[joint_id]
-                if joint_type == const.JNT_HINGE:
-                    if sensor_type == const.SENS_JOINTPOS:
+                if joint_type == mujoco.mjtObj.mjJNT_HINGE:
+                    if sensor_type == mujoco.mjtObj.mjSENS_JOINTPOS:
                         self.hinge_pos_names.append(name)
-                    elif sensor_type == const.SENS_JOINTVEL:
+                    elif sensor_type == mujoco.mjtObj.mjSENS_JOINTVEL:
                         self.hinge_vel_names.append(name)
                     else:
                         t = self.sim.model.sensor_type[i]
                         raise ValueError('Unrecognized sensor type {} for joint'.format(t))
-                elif joint_type == const.JNT_BALL:
-                    if sensor_type == const.SENS_BALLQUAT:
+                elif joint_type == mujoco.mjtObj.mjJNT_BALL:
+                    if sensor_type == mujoco.mjtObj.mjSENS_BALLQUAT:
                         self.ballquat_names.append(name)
-                    elif sensor_type == const.SENS_BALLANGVEL:
+                    elif sensor_type == mujoco.mjtObj.mjSENS_BALLANGVEL:
                         self.ballangvel_names.append(name)
-                elif joint_type == const.JNT_SLIDE:
+                elif joint_type == mujoco.mjtObj.mjJNT_SLIDE:
                     # Adding slide joints is trivially easy in code,
                     # but this removes one of the good properties about our observations.
                     # (That we are invariant to relative whole-world transforms)
