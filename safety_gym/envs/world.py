@@ -13,6 +13,8 @@ from mujoco import FatalError as MujocoException
 from mujoco import MjrContext as MjRenderContextOffscreen
 from mujoco import MjData as MjSim
 from mujoco import mj_name2id, mjtObj
+from mujoco import mjtJoint, mjtSensor
+
 import safety_gym
 import sys
 
@@ -417,20 +419,20 @@ class Robot:
             if self.sim.model.sensor_objtype[id] == mujoco.mjtObj.mjOBJ_JOINT:
                 joint_id = self.sim.model.sensor_objid[id]
                 joint_type = self.sim.model.jnt_type[joint_id]
-                if joint_type == mujoco.mjtObj.mjJNT_HINGE:
-                    if sensor_type == mujoco.mjtObj.mjSENS_JOINTPOS:
+                if joint_type == mujoco.mjtJoint.mjJNT_HINGE:
+                    if sensor_type == mujoco.mjtSensor.mjSENS_JOINTPOS:
                         self.hinge_pos_names.append(name)
-                    elif sensor_type == mujoco.mjtObj.mjSENS_JOINTVEL:
+                    elif sensor_type == mujoco.mjtSensor.mjSENS_JOINTVEL:
                         self.hinge_vel_names.append(name)
                     else:
                         t = self.sim.model.sensor_type[i]
                         raise ValueError('Unrecognized sensor type {} for joint'.format(t))
-                elif joint_type == mujoco.mjtObj.mjJNT_BALL:
-                    if sensor_type == mujoco.mjtObj.mjSENS_BALLQUAT:
+                elif joint_type == mujoco.mjtJoint.mjJNT_BALL:
+                    if sensor_type == mujoco.mjtSensor.mjSENS_BALLQUAT:
                         self.ballquat_names.append(name)
-                    elif sensor_type == mujoco.mjtObj.mjSENS_BALLANGVEL:
+                    elif sensor_type == mujoco.mjtSensor.mjSENS_BALLANGVEL:
                         self.ballangvel_names.append(name)
-                elif joint_type == mujoco.mjtObj.mjJNT_SLIDE:
+                elif joint_type == mujoco.mjtJoint.mjJNT_SLIDE:
                     # Adding slide joints is trivially easy in code,
                     # but this removes one of the good properties about our observations.
                     # (That we are invariant to relative whole-world transforms)
