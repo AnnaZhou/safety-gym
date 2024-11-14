@@ -9,10 +9,11 @@ from collections import OrderedDict
 #import mujoco_py
 #from mujoco_py import MjViewer, MujocoException, const, MjRenderContextOffscreen
 import mujoco
-from mujoco import MjModel, MjData, viewer
+from mujoco import MjModel, MjData
+from mujoco import viewer as MjViewer
 from mujoco.viewer import launch_passive
-from mujoco import FatalError as MjError
-
+from mujoco import FatalError as MujocoException
+from mujoco import MjrContext as MjRenderContextOffscreen
 from safety_gym.envs.world import World, Robot
 
 import sys
@@ -981,7 +982,7 @@ class Engine(gym.Env, gym.utils.EzPickle):
         around the robot z axis.
         '''
         body = self.model.body_name2id('robot')
-        grp = np.asarray([i == group for i in range(int(const.NGROUP))], dtype='uint8')
+        grp = np.asarray([i == group for i in range(int(mujoco.mjNGROUP))], dtype='uint8')
         pos = np.asarray(self.world.robot_pos(), dtype='float64')
         mat_t = self.world.robot_mat()
         obs = np.zeros(self.lidar_num_bins)
@@ -1371,7 +1372,7 @@ class Engine(gym.Env, gym.utils.EzPickle):
             alpha = min(1, sensor + .1)
             self.viewer.add_marker(pos=pos,
                                    size=self.render_lidar_size * np.ones(3),
-                                   type=const.GEOM_SPHERE,
+                                   type=mujoco.mjtGeom.mjGEOM_SPHERE,
                                    rgba=np.array(color) * alpha,
                                    label='')
 
@@ -1384,7 +1385,7 @@ class Engine(gym.Env, gym.utils.EzPickle):
         pos = robot_pos + np.matmul(compass, robot_mat.transpose())
         self.viewer.add_marker(pos=pos,
                                size=.05 * np.ones(3),
-                               type=const.GEOM_SPHERE,
+                               type=mujoco.mjtGeom.mjGEOM_SPHERE,
                                rgba=np.array(color) * 0.5,
                                label='')
 
@@ -1396,7 +1397,7 @@ class Engine(gym.Env, gym.utils.EzPickle):
             pos = np.r_[pos, 0]  # Z coordinate 0
         self.viewer.add_marker(pos=pos,
                                size=[size, size, z_size],
-                               type=const.GEOM_CYLINDER,
+                               type=mujoco.mjtGeom.mjGEOM_CYLINDER,
                                rgba=np.array(color) * alpha,
                                label=label if self.render_labels else '')
 
@@ -1407,7 +1408,7 @@ class Engine(gym.Env, gym.utils.EzPickle):
             pos = np.r_[pos, 0]  # Z coordinate 0
         self.viewer.add_marker(pos=pos,
                                size=size * np.ones(3),
-                               type=const.GEOM_SPHERE,
+                               type=mujoco.mjtGeom.mjGEOM_SPHERE,
                                rgba=np.array(color) * alpha,
                                label=label if self.render_labels else '')
 
@@ -1429,12 +1430,12 @@ class Engine(gym.Env, gym.utils.EzPickle):
             if mode == 'human':
                 self.viewer = MjViewer(self.sim)
                 self.viewer.cam.fixedcamid = -1
-                self.viewer.cam.type = const.CAMERA_FREE
+                self.viewer.cam.type = mujoco.mjtCamera.mjCAMERA_FREE
             else:
                 self.viewer = MjRenderContextOffscreen(self.sim)
                 self.viewer._hide_overlay = True
                 self.viewer.cam.fixedcamid = camera_id #self.model.camera_name2id(mode)
-                self.viewer.cam.type = const.CAMERA_FIXED
+                self.viewer.cam.type = mujoco.mjtCamera.mjCAMERA_FIXED
             self.viewer.render_swap_callback = self.render_swap_callback
             # Turn all the geom groups on
             self.viewer.vopt.geomgroup[:] = 1
