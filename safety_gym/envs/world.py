@@ -298,7 +298,7 @@ class World:
 
         # Recompute simulation intrinsics from new position
         #self.sim.mj_forward()
-        mj_forward(self.model, self.sim)
+        mujoco.mj_forward(self.model, self.sim)
 
     def rebuild(self, config={}, state=True):
         ''' Build a new sim from a model if the model changed '''
@@ -311,7 +311,7 @@ class World:
         if state:
             self.sim.set_state(old_state)
         #self.sim.mj_forward()
-        mj_forward(self.model, self.sim)
+        mujoco.mj_forward(self.model, self.sim)
 
     def reset(self, build=True):
         ''' Reset the world (sim is accessed through self.sim) '''
@@ -381,7 +381,7 @@ class Robot:
         self.model = MjModel.from_xml_path(base_path)
         # Create a data object to store simulation state
         self.sim = MjData(self.model)
-        mj_forward(self.model, self.sim)
+        mujoco.mj_forward(self.model, self.sim)
 
         # Needed to figure out z-height of free joint of offset body
         self.z_height = self.sim.data.get_body_xpos('robot')[2]
