@@ -297,7 +297,7 @@ class World:
             self.render_context.update_sim(self.sim)
 
         # Recompute simulation intrinsics from new position
-        self.sim.forward()
+        self.sim.mj_forward()
 
     def rebuild(self, config={}, state=True):
         ''' Build a new sim from a model if the model changed '''
@@ -309,7 +309,7 @@ class World:
         self.build()
         if state:
             self.sim.set_state(old_state)
-        self.sim.forward()
+        self.sim.mj_forward()
 
     def reset(self, build=True):
         ''' Reset the world (sim is accessed through self.sim) '''
@@ -375,7 +375,7 @@ class Robot:
     def __init__(self, path):
         base_path = os.path.join(BASE_DIR, path)
         self.sim = MjSim(MjModel.from_xml_path(base_path))
-        self.sim.forward()
+        self.sim.mj_forward()
 
         # Needed to figure out z-height of free joint of offset body
         self.z_height = self.sim.data.get_body_xpos('robot')[2]
