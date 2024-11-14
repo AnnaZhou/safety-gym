@@ -389,7 +389,9 @@ class Robot:
         body_id = mujoco.mj_name2id(self.sim.model, mujoco.mjtObj.mjOBJ_BODY, 'robot')
         self.z_height = self.sim.xpos[body_id][2]
         # Get a list of geoms in the robot
-        self.geom_names = [n for n in self.sim.model.geom_names if n != 'floor']
+        #self.geom_names = [n for n in self.sim.model.geom_names if n != 'floor']
+        self.geom_names = [mujoco.mj_id2name(self.sim.model, mujoco.mjtObj.mjOBJ_GEOM, i) for i in range(self.sim.model.ngeom) if
+                           mujoco.mj_id2name(self.sim.model, mujoco.mjtObj.mjOBJ_GEOM, i) != 'floor']
         # Needed to figure out the observation spaces
         self.nq = self.sim.model.nq
         self.nv = self.sim.model.nv
