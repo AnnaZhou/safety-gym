@@ -5,7 +5,6 @@ import xmltodict
 import numpy as np
 from copy import deepcopy
 from collections import OrderedDict
-#from mujoco_py import const, load_model_from_path, load_model_from_xml, MjSim, MjViewer, MjRenderContextOffscreen
 import mujoco
 from mujoco import MjModel, MjData
 from mujoco import viewer as MjViewer
