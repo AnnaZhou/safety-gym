@@ -11,7 +11,7 @@ from mujoco import viewer as MjViewer
 from mujoco.viewer import launch_passive
 from mujoco import FatalError as MujocoException
 from mujoco import MjrContext as MjRenderContextOffscreen
-from mujoco import MjSim
+from mujoco import MjData as MjSim
 import safety_gym
 import sys
 
