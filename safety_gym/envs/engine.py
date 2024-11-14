@@ -6,8 +6,7 @@ import numpy as np
 from PIL import Image
 from copy import deepcopy
 from collections import OrderedDict
-#import mujoco_py
-#from mujoco_py import MjViewer, MujocoException, const, MjRenderContextOffscreen
+
 import mujoco
 from mujoco import MjModel, MjData
 from mujoco import viewer as MjViewer
