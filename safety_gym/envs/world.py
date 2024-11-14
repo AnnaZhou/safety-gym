@@ -404,8 +404,14 @@ class Robot:
         self.ballquat_names = []
         self.ballangvel_names = []
         self.sensor_dim = {}
-        for name in self.sim.model.sensor_names:
-            id = self.sim.model.sensor_name2id(name)
+        #for name in self.sim.model.sensor_names:
+        for i in range(sim.model.nsensor):
+            name = mujoco.mj_id2name(self.sim.model, mujoco.mjtObj.mjOBJ_SENSOR, i)
+            if name:
+                sensor_id = i
+                self.sensor_dim[name] = self.sim.model.sensor_dim[sensor_id]
+            #id = self.sim.model.sensor_name2id(name)
+            id = sensor_id
             self.sensor_dim[name] = self.sim.model.sensor_dim[id]
             sensor_type = self.sim.model.sensor_type[id]
             if self.sim.model.sensor_objtype[id] == mujoco.mjtObj.mjOBJ_JOINT:
