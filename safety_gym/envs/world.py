@@ -288,7 +288,7 @@ class World:
         # print(xmltodict.unparse(self.xml, pretty=True))
         self.xml_string = xmltodict.unparse(self.xml)
         self.model = MjModel.from_xml_string(self.xml_string)
-        self.sim = MjData(self.model)
+        self.sim = mujoco.MjData(self.model)
 
         # Add render contexts to newly created sim
         if self.render_context is None and self.observe_vision:
