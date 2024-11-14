@@ -12,7 +12,7 @@ from mujoco.viewer import launch_passive
 from mujoco import FatalError as MujocoException
 from mujoco import MjrContext as MjRenderContextOffscreen
 from mujoco import MjData as MjSim
-from mujoco import mj_name2id, mjtObjType
+from mujoco import mj_name2id, mjtObj
 import safety_gym
 import sys
 
@@ -386,7 +386,7 @@ class Robot:
 
         # Needed to figure out z-height of free joint of offset body
         #self.z_height = self.sim.data.get_body_xpos('robot')[2]
-        body_id = mujoco.mj_name2id(self.sim.model, mjtObjType.mjOBJ_BODY, 'robot')
+        body_id = mujoco.mj_name2id(self.sim.model, mujoco.mjtObj.mjOBJ_BODY, 'robot')
         self.z_height = self.sim.xpos[body_id][2]
         # Get a list of geoms in the robot
         self.geom_names = [n for n in self.sim.model.geom_names if n != 'floor']
