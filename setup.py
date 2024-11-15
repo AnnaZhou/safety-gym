@@ -12,7 +12,7 @@ setup(
     packages=['safety_gym'],
     install_requires=[
         'gym~=0.15.3',
-        'joblib~=0.14.0',
+        'joblib~=0.14.1',
         #'mujoco_py==2.0.2.7',
         'mujoco==3.2.5',
         'numpy~=1.26.4',
