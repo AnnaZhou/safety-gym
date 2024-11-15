@@ -8,6 +8,7 @@
         <site size="0.032" type="sphere"/>
     </default>
     <worldbody>
+        <light name="top" pos="0 0 1"/>
         <geom name="floor" size="5 5 0.1" type="plane" condim="6"/>
         <body name="robot" pos="0 0 .1">
             <site name="robot" pos="0 0 0"/>
