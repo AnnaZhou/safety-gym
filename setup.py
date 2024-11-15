@@ -12,7 +12,7 @@ setup(
     packages=['safety_gym'],
     install_requires=[
         'gym~=0.15.3',
-        'joblib~=0.14.2',
+        'joblib~=1.4.2',
         'cloudpickle>=3.0.0',
         #'mujoco_py==2.0.2.7',
         'mujoco==3.2.5',
