@@ -14,7 +14,8 @@ setup(
         'gym~=0.15.3',
         'joblib~=0.14.0',
         #'mujoco_py==2.0.2.7',
+        'mujoco==3.2.5',
         'numpy~=1.26.4',
-        #'xmltodict~=0.12.0',
+        'xmltodict~=0.14.2',
     ],
 )
