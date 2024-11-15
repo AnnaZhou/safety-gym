@@ -843,7 +843,8 @@ class Engine(gym.Env, gym.utils.EzPickle):
         #goal_body_id = self.sim.model.body_name2id('goal')
         #self.sim.model.body_pos[goal_body_id][:2] = self.layout['goal']
         goal_body_id = mujoco.mj_name2id(self.sim.model, mujoco.mjtObj.mjOBJ_BODY, 'goal')
-        self.sim.model.body_pos[goal_body_id][:2] = self.sim.layout['goal']
+        #self.sim.model.body_pos[goal_body_id][:2] = self.sim.layout['goal']
+        self.sim.model.body_pos[goal_body_id][:2] = self.layout['goal']
 
         self.sim.forward()
 
