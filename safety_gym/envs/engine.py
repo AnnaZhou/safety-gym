@@ -13,6 +13,8 @@ from mujoco import viewer as MjViewer
 from mujoco.viewer import launch_passive
 from mujoco import FatalError as MujocoException
 from mujoco import MjrContext as MjRenderContextOffscreen
+from mujoco import mj_forward
+
 from safety_gym.envs.world import World, Robot
 
 import sys
@@ -846,7 +848,8 @@ class Engine(gym.Env, gym.utils.EzPickle):
         #self.sim.model.body_pos[goal_body_id][:2] = self.sim.layout['goal']
         self.sim.model.body_pos[goal_body_id][:2] = self.layout['goal']
 
-        self.sim.forward()
+        #self.sim.forward()
+        mujoco.mj_forward(self.sim.model, self.sim)
 
     def build_goal_button(self):
         ''' Pick a new goal button, maybe with resampling due to hazards '''
