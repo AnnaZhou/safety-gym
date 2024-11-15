@@ -13,7 +13,7 @@ setup(
     install_requires=[
         'gym~=0.15.3',
         'joblib~=1.4.2',
-        'cloudpickle>=3.0.0',
+        'cloudpickle==1.2.0',
         #'mujoco_py==2.0.2.7',
         'mujoco==3.2.5',
         'numpy~=1.26.4',
