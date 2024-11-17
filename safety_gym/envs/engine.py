@@ -851,9 +851,9 @@ class Engine(gym.Env, gym.utils.EzPickle):
         #self.sim.model.body_pos[goal_body_id][:2] = self.sim.layout['goal']
         self.sim.model.body_pos[goal_body_id][:2] = self.layout['goal']
         print(self.sim.model.body_pos[goal_body_id][:2])
-
         #self.sim.forward()
-        mujoco.mj_forward(self.sim.model, self.sim.data)
+        mujoco.mj_forward(self.sim.model, self.data)
+        print("qpos:", self.data.qpos)
 
     def build_goal_button(self):
         ''' Pick a new goal button, maybe with resampling due to hazards '''
