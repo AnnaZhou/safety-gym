@@ -16,7 +16,7 @@ class TestGoal(unittest.TestCase):
     def test_resample(self):
         ''' Episode should end with resampling failure '''
         config = {
-            'robot_base': 'xmls/point.xml',
+            'robot_base': '/content/safety-gym/safety_gym/xmls/point.xml',
             'num_steps': 1001,
             'placements_extents': [-1, -1, 1, 1],
             'goal_size': 1.414,

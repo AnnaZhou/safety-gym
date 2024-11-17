@@ -343,7 +343,7 @@ class Engine(gym.Env, gym.utils.EzPickle):
     @property
     def data(self):
         ''' Helper to get the world's simulation data instance '''
-        return self.data
+        return self.sim.data
 
     @property
     def robot_pos(self):
@@ -854,8 +854,8 @@ class Engine(gym.Env, gym.utils.EzPickle):
         print("data.qpos:",self.data.qpos)
         #mujoco.mj_forward(self.sim.model,self.sim.forward)
         print("sim.model.pos:",self.sim.model.body_pos)
-        #self.sim.forward()
-        mujoco.mj_forward(self.sim.model, self.data)
+        self.sim.forward()
+        #mujoco.mj_forward(self.sim.model, self.data)
         print("qpos:", self.data.qpos)
 
     def build_goal_button(self):
@@ -1058,7 +1058,7 @@ class Engine(gym.Env, gym.utils.EzPickle):
 
     def obs(self):
         ''' Return the observation of our agent '''
-        self.sim.forward()  # Needed to get sensordata correct
+        self.sim.forward()  # Needed to get sensor data correct
         obs = {}
 
         if self.observe_goal_dist:
