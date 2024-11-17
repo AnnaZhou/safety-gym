@@ -343,7 +343,7 @@ class Engine(gym.Env, gym.utils.EzPickle):
     @property
     def data(self):
         ''' Helper to get the world's simulation data instance '''
-        return self.sim.data
+        return self.data
 
     @property
     def robot_pos(self):
