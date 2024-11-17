@@ -338,7 +338,7 @@ class Engine(gym.Env, gym.utils.EzPickle):
     @property
     def model(self):
         ''' Helper to get the world's model instance '''
-        return self.sim.model
+        return self.model
 
     @property
     def data(self):
