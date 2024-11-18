@@ -846,16 +846,16 @@ class Engine(gym.Env, gym.utils.EzPickle):
         #self.sim.model.body_pos[goal_body_id][:2] = self.layout['goal']
         #goal_body_id = mujoco.mj_name2id(self.sim.model, mujoco.mjtObj.mjOBJ_BODY, 'goal')
         # Assuming `self.model` is the model loaded from an MJCF or XML file
-        goal_body_id = self.sim.model.body(name='goal').id
+        goal_body_id = self.model.body(name='goal').id
         print("goal_body_id:",goal_body_id)
         #self.sim.model.body_pos[goal_body_id][:2] = self.sim.layout['goal']
         self.sim.model.body_pos[goal_body_id][:2] = self.layout['goal']
-        print("body_pos:",self.sim.model.body_pos[goal_body_id][:2])
+        print("body_pos:",self.model.body_pos[goal_body_id][:2])
         print("data.qpos:",self.data.qpos)
         #mujoco.mj_forward(self.sim.model,self.sim.forward)
-        print("sim.model.pos:",self.sim.model.body_pos)
-        self.sim.forward()
-        #mujoco.mj_forward(self.sim.model, self.data)
+        print("sim.model.pos:",self.model.body_pos)
+        #self.sim.forward()
+        mujoco.mj_forward(self.model, self.data)
         print("qpos:", self.data.qpos)
 
     def build_goal_button(self):
@@ -975,7 +975,7 @@ class Engine(gym.Env, gym.utils.EzPickle):
         # Get a render context so we can
         rows, cols = self.vision_size
         width, height = cols, rows
-        vision = self.sim.render(width, height, camera_name='vision', mode='offscreen')
+        #vision = self.sim.render(width, height, camera_name='vision', mode='offscreen')
         return np.array(vision, dtype='float32') / 255
 
     def obs_lidar(self, positions, group):
