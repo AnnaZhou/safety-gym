@@ -975,7 +975,7 @@ class Engine(gym.Env, gym.utils.EzPickle):
         # Get a render context so we can
         rows, cols = self.vision_size
         width, height = cols, rows
-        #vision = self.sim.render(width, height, camera_name='vision', mode='offscreen')
+        vision = self.sim.render(width, height, camera_name='vision', mode='offscreen')
         return np.array(vision, dtype='float32') / 255
 
     def obs_lidar(self, positions, group):
