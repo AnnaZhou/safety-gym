@@ -383,7 +383,7 @@ class Robot:
         #self.sim.mj_forward()
         self.sim = mujoco.MjModel.from_xml_path(base_path)
         # Create a data object to store simulation state
-        self.sim.data = mujoco.MjData(self.sim.model)
+        self.sim.data = mujoco.MjData(self.sim)
         mujoco.mj_forward(self.sim.model, self.sim.data)
 
         # Needed to figure out z-height of free joint of offset body
