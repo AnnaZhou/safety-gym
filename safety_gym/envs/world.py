@@ -381,17 +381,17 @@ class Robot:
         base_path = os.path.join(BASE_DIR, path)
         #self.sim = MjSim(MjModel.from_xml_path(base_path))
         #self.sim.mj_forward()
-        #self.sim = mujoco.MjModel.from_xml_path(base_path)
-        # Create a data object to store simulation state
-        #self.data = mujoco.MjData(self.sim)
-        #mujoco.mj_forward(self.sim.model, self.data)
-        # Load the MuJoCo model from the given XML file path.
         self.model = mujoco.MjModel.from_xml_path(base_path)
+        # Create a data object to store simulation state
+        self.sim = mujoco.MjData(self.model)
+        #mujoco.mj_forward(self.sim.model, self.sim)
+        # Load the MuJoCo model from the given XML file path.
+        #self.model = mujoco.MjModel.from_xml_path(base_path)
         #self.sim = self.model
         # Create a data object to store simulation state.
         self.data = mujoco.MjData(self.model)
         # Perform the forward dynamics computation.
-        mujoco.mj_forward(self.model, self.data)
+        mujoco.mj_forward(self.model, self.sim)
 
         # Needed to figure out z-height of free joint of offset body
         #self.z_height = self.sim.data.get_body_xpos('robot')[2]
