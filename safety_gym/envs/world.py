@@ -15,7 +15,7 @@ from mujoco import MjrContext as MjRenderContextOffscreen
 from mujoco import mj_name2id, mjtObj
 from mujoco import mjtJoint, mjtSensor
 from mujoco import MjModel, MjData
-from mujoco import MjSim
+#from mujoco import MjSim
 import mujoco.mjt as const
 import os
 import safety_gym
@@ -99,7 +99,7 @@ class World:
     @property
     def data(self):
         ''' Helper to get the simulation data instance '''
-        return self.sim.data
+        return self.data
 
     # TODO: remove this when mujoco-py fix is merged and a new version is pushed
     # https://github.com/openai/mujoco-py/pull/354
@@ -291,33 +291,33 @@ class World:
         # print(xmltodict.unparse(self.xml, pretty=True))
         self.xml_string = xmltodict.unparse(self.xml)
         self.model = MjModel.from_xml_string(self.xml_string)
-        self.sim = mujoco.MjData(self.model)
+        self.data = mujoco.MjData(self.model)
 
         # Add render contexts to newly created sim
         if self.render_context is None and self.observe_vision:
-            render_context = MjRenderContextOffscreen(self.sim, device_id=-1, quiet=True)
+            render_context = MjRenderContextOffscreen(self.data, device_id=-1, quiet=True)
             render_context.vopt.geomgroup[:] = 1
             self.render_context = render_context
 
         if self.render_context is not None:
-            self.render_context.update_sim(self.sim)
+            self.render_context.update_sim(self.data)
 
         # Recompute simulation intrinsics from new position
         #self.sim.mj_forward()
-        mujoco.mj_forward(self.model, self.sim)
+        mujoco.mj_forward(self.model, self.data)
 
     def rebuild(self, config={}, state=True):
         ''' Build a new sim from a model if the model changed '''
         if state:
-            old_state = self.sim.get_state()
+            old_state = self.data.get_state()
         #self.config.update(deepcopy(config))
         #self.parse(self.config)
         self.parse(config)
         self.build()
         if state:
-            self.sim.set_state(old_state)
+            self.data.set_state(old_state)
         #self.sim.mj_forward()
-        mujoco.mj_forward(self.model, self.sim)
+        mujoco.mj_forward(self.model, self.data)
 
     def reset(self, build=True):
         ''' Reset the world (sim is accessed through self.sim) '''
@@ -329,7 +329,7 @@ class World:
     def render(self, mode='human'):
         ''' Render the environment to the screen '''
         if self.viewer is None:
-            self.viewer = MjViewer(self.sim)
+            self.viewer = MjViewer(self.data)
             # Turn all the geom groups on
             self.viewer.vopt.geomgroup[:] = 1
             # Set camera if specified
@@ -340,7 +340,7 @@ class World:
                 self.viewer.cam.fixedcamid = self.model.camera_name2id(mode)
                 self.viewer.cam.type = mujoco.mjtCamera.mjCAMERA_FIXED
         if self.update_viewer_sim:
-            self.viewer.update_sim(self.sim)
+            self.viewer.update_sim(self.data)
             self.update_viewer_sim = False
         self.viewer.render()
 
@@ -389,17 +389,17 @@ class Robot:
         #self.sim = mujoco.MjData(self.model)
         #mujoco.mj_forward(self.sim.model, self.sim)
         # Load the MuJoCo model from the given XML file path.
-        #self.model = mujoco.MjModel.from_xml_path(base_path)
+        self.model = mujoco.MjModel.from_xml_path(base_path)
         #self.sim = self.model
         # Create a data object to store simulation state.
-        #self.data = mujoco.MjData(self.model)
+        self.data = mujoco.MjData(self.model)
         # Perform the forward dynamics computation.
-        #mujoco.mj_forward(self.model, self.sim)
+        mujoco.mj_forward(self.model, self.data)
         #base_path = os.path.join(BASE_DIR, path)
-        self.model = MjModel.from_xml_path(base_path)
-        self.data = MjData(self.model)
-        self.sim = MjSim(self.model)
-        self.sim.forward()
+        #self.model = MjModel.from_xml_path(base_path)
+        #self.data = MjData(self.model)
+        #self.sim = MjSim(self.model)
+        #self.sim.forward()
 
         # Needed to figure out z-height of free joint of offset body
         self.z_height = self.data.body('robot').xpos[2]
