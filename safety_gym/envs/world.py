@@ -381,7 +381,7 @@ class Robot:
         base_path = os.path.join(BASE_DIR, path)
         #self.sim = MjSim(MjModel.from_xml_path(base_path))
         #self.sim.mj_forward()
-        self.sim.model = mujoco.MjModel.from_xml_path(base_path)
+        self.sim = mujoco.MjModel.from_xml_path(base_path)
         # Create a data object to store simulation state
         self.sim.data = mujoco.MjData(self.sim.model)
         mujoco.mj_forward(self.sim.model, self.sim.data)
