@@ -16,7 +16,7 @@ from mujoco import mj_name2id, mjtObj
 from mujoco import mjtJoint, mjtSensor
 from mujoco import MjModel, MjData
 #from mujoco import MjSim
-import mujoco.mjt as const
+#import mujoco.mjt as const
 import os
 import safety_gym
 import sys
@@ -422,26 +422,35 @@ class Robot:
         self.ballangvel_names = []
         self.sensor_dim = {}
 
-        for name in self.model.sensor_names:
-            sensor_id = self.model.sensor(name).id
-            self.sensor_dim[name] = self.model.sensor_dim[sensor_id]
-            sensor_type = self.model.sensor_type[sensor_id]
-
-            if self.model.sensor_objtype[sensor_id] == const.OBJ_JOINT:
-                joint_id = self.model.sensor_objid[sensor_id]
-                joint_type = self.model.jnt_type[joint_id]
-
-                if joint_type == const.JNT_HINGE:
-                    if sensor_type == const.SENS_JOINTPOS:
-                        self.hinge_pos_names.append(name)
-                    elif sensor_type == const.SENS_JOINTVEL:
-                        self.hinge_vel_names.append(name)
-                    else:
-                        raise ValueError('Unrecognized sensor type {} for joint'.format(sensor_type))
-                elif joint_type == const.JNT_BALL:
-                    if sensor_type == const.SENS_BALLQUAT:
-                        self.ballquat_names.append(name)
-                    elif sensor_type == const.SENS_BALLANGVEL:
-                        self.ballangvel_names.append(name)
-                elif joint_type == const.JNT_SLIDE:
-                    raise ValueError('Slide joints in robots not currently supported')
+        #for name in self.sim.model.sensor_names:
+        for i in range(self.model.nsensor):
+            name = mujoco.mj_id2name(self.model, mujoco.mjtObj.mjOBJ_SENSOR, i)
+            if name:
+                sensor_id = i
+                id = sensor_id
+                self.sensor_dim[name] = self.model.sensor_dim[sensor_id]
+        #id = self.sim.model.sensor_name2id(name)
+        self.sensor_dim[name] = self.model.sensor_dim[id]
+        sensor_type = self.model.sensor_type[id]
+        if self.model.sensor_objtype[id] == mujoco.mjtObj.mjOBJ_JOINT:
+            joint_id = self.model.sensor_objid[id]
+            joint_type = self.model.jnt_type[joint_id]
+            if joint_type == mujoco.mjtJoint.mjJNT_HINGE:
+                if sensor_type == mujoco.mjtSensor.mjSENS_JOINTPOS:
+                    self.hinge_pos_names.append(name)
+                elif sensor_type == mujoco.mjtSensor.mjSENS_JOINTVEL:
+                    self.hinge_vel_names.append(name)
+                else:
+                    t = self.model.sensor_type[i]
+                    raise ValueError('Unrecognized sensor type {} for joint'.format(t))
+            elif joint_type == mujoco.mjtJoint.mjJNT_BALL:
+                if sensor_type == mujoco.mjtSensor.mjSENS_BALLQUAT:
+                    self.ballquat_names.append(name)
+                elif sensor_type == mujoco.mjtSensor.mjSENS_BALLANGVEL:
+                    self.ballangvel_names.append(name)
+            elif joint_type == mujoco.mjtJoint.mjJNT_SLIDE:
+                # Adding slide joints is trivially easy in code,
+                # but this removes one of the good properties about our observations.
+                # (That we are invariant to relative whole-world transforms)
+                # If slide joints are added we sould ensure this stays true!
+                raise ValueError('Slide joints in robots not currently supported')
