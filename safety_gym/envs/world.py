@@ -14,7 +14,8 @@ from mujoco import MjrContext as MjRenderContextOffscreen
 #from mujoco import MjData as MjSim
 from mujoco import mj_name2id, mjtObj
 from mujoco import mjtJoint, mjtSensor
-from mujoco import MjModel, MjData, MjSim,const
+from mujoco import MjModel, MjData, const
+from mujoco.glfw import MjSim
 import os
 import safety_gym
 import sys
