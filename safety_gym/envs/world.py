@@ -396,7 +396,7 @@ class Robot:
         # Needed to figure out z-height of free joint of offset body
         #self.z_height = self.sim.data.get_body_xpos('robot')[2]
         body_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_BODY, 'robot')
-        self.z_height = self.sim.xpos[body_id][2]
+        self.z_height = self.xpos[body_id][2]
         # Get a list of geoms in the robot
         #self.geom_names = [n for n in self.sim.model.geom_names if n != 'floor']
         self.geom_names = [mujoco.mj_id2name(self.model, mujoco.mjtObj.mjOBJ_GEOM, i) for i in range(self.sim.model.ngeom) if
