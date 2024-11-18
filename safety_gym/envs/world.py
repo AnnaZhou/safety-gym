@@ -1,20 +1,21 @@
 #!/usr/bin/env python
 
-import os
+#import os
 import xmltodict
 import numpy as np
 from copy import deepcopy
 from collections import OrderedDict
 import mujoco
-from mujoco import MjModel
+#from mujoco import MjModel
 from mujoco import viewer as MjViewer
 from mujoco.viewer import launch_passive
 from mujoco import FatalError as MujocoException
 from mujoco import MjrContext as MjRenderContextOffscreen
-from mujoco import MjData as MjSim
+#from mujoco import MjData as MjSim
 from mujoco import mj_name2id, mjtObj
 from mujoco import mjtJoint, mjtSensor
-
+from mujoco import MjModel, MjData, MjSim,const
+import os
 import safety_gym
 import sys
 
@@ -381,32 +382,36 @@ class Robot:
         base_path = os.path.join(BASE_DIR, path)
         #self.sim = MjSim(MjModel.from_xml_path(base_path))
         #self.sim.mj_forward()
-        self.model = mujoco.MjModel.from_xml_path(base_path)
+        #self.model = mujoco.MjModel.from_xml_path(base_path)
         # Create a data object to store simulation state
-        self.sim = mujoco.MjData(self.model)
+        #self.sim = mujoco.MjData(self.model)
         #mujoco.mj_forward(self.sim.model, self.sim)
         # Load the MuJoCo model from the given XML file path.
         #self.model = mujoco.MjModel.from_xml_path(base_path)
         #self.sim = self.model
         # Create a data object to store simulation state.
-        self.data = mujoco.MjData(self.model)
+        #self.data = mujoco.MjData(self.model)
         # Perform the forward dynamics computation.
-        mujoco.mj_forward(self.model, self.sim)
+        #mujoco.mj_forward(self.model, self.sim)
+        #base_path = os.path.join(BASE_DIR, path)
+        self.model = MjModel.from_xml_path(base_path)
+        self.data = MjData(self.model)
+        self.sim = MjSim(self.model)
+        self.sim.forward()
 
         # Needed to figure out z-height of free joint of offset body
-        #self.z_height = self.sim.data.get_body_xpos('robot')[2]
-        body_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_BODY, 'robot')
-        #self.z_height = self.xpos[body_id][2]
-        self.z_height = self.data.xpos[body_id][2]
+        self.z_height = self.data.body('robot').xpos[2]
+
         # Get a list of geoms in the robot
-        #self.geom_names = [n for n in self.sim.model.geom_names if n != 'floor']
-        self.geom_names = [mujoco.mj_id2name(self.model, mujoco.mjtObj.mjOBJ_GEOM, i) for i in range(self.model.ngeom) if
-                           mujoco.mj_id2name(self.model, mujoco.mjtObj.mjOBJ_GEOM, i) != 'floor']
+        self.geom_names = [n for n in self.model.geom_names if n != 'floor']
+
         # Needed to figure out the observation spaces
         self.nq = self.model.nq
         self.nv = self.model.nv
+
         # Needed to figure out action space
         self.nu = self.model.nu
+
         # Needed to figure out observation space
         # See engine.py for an explanation for why we treat these separately
         self.hinge_pos_names = []
@@ -414,35 +419,27 @@ class Robot:
         self.ballquat_names = []
         self.ballangvel_names = []
         self.sensor_dim = {}
-        #for name in self.sim.model.sensor_names:
-        for i in range(self.model.nsensor):
-            name = mujoco.mj_id2name(self.model, mujoco.mjtObj.mjOBJ_SENSOR, i)
-            if name:
-                sensor_id = i
-                id = sensor_id
-                self.sensor_dim[name] = self.model.sensor_dim[sensor_id]
-            #id = self.sim.model.sensor_name2id(name)
-            self.sensor_dim[name] = self.model.sensor_dim[id]
-            sensor_type = self.model.sensor_type[id]
-            if self.model.sensor_objtype[id] == mujoco.mjtObj.mjOBJ_JOINT:
-                joint_id = self.model.sensor_objid[id]
+
+        for name in self.model.sensor_names:
+            sensor_id = self.model.sensor(name).id
+            self.sensor_dim[name] = self.model.sensor_dim[sensor_id]
+            sensor_type = self.model.sensor_type[sensor_id]
+
+            if self.model.sensor_objtype[sensor_id] == const.OBJ_JOINT:
+                joint_id = self.model.sensor_objid[sensor_id]
                 joint_type = self.model.jnt_type[joint_id]
-                if joint_type == mujoco.mjtJoint.mjJNT_HINGE:
-                    if sensor_type == mujoco.mjtSensor.mjSENS_JOINTPOS:
+
+                if joint_type == const.JNT_HINGE:
+                    if sensor_type == const.SENS_JOINTPOS:
                         self.hinge_pos_names.append(name)
-                    elif sensor_type == mujoco.mjtSensor.mjSENS_JOINTVEL:
+                    elif sensor_type == const.SENS_JOINTVEL:
                         self.hinge_vel_names.append(name)
                     else:
-                        t = self.model.sensor_type[i]
-                        raise ValueError('Unrecognized sensor type {} for joint'.format(t))
-                elif joint_type == mujoco.mjtJoint.mjJNT_BALL:
-                    if sensor_type == mujoco.mjtSensor.mjSENS_BALLQUAT:
+                        raise ValueError('Unrecognized sensor type {} for joint'.format(sensor_type))
+                elif joint_type == const.JNT_BALL:
+                    if sensor_type == const.SENS_BALLQUAT:
                         self.ballquat_names.append(name)
-                    elif sensor_type == mujoco.mjtSensor.mjSENS_BALLANGVEL:
+                    elif sensor_type == const.SENS_BALLANGVEL:
                         self.ballangvel_names.append(name)
-                elif joint_type == mujoco.mjtJoint.mjJNT_SLIDE:
-                    # Adding slide joints is trivially easy in code,
-                    # but this removes one of the good properties about our observations.
-                    # (That we are invariant to relative whole-world transforms)
-                    # If slide joints are added we sould ensure this stays true!
+                elif joint_type == const.JNT_SLIDE:
                     raise ValueError('Slide joints in robots not currently supported')
