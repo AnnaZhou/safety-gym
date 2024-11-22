@@ -30,4 +30,12 @@
         <!-- Add more objects as needed -->
     </worldbody>
     <!-- Rest of your XML file remains the same -->
+
+        <!-- Add this actuator section -->
+    <actuator>
+        <motor joint="x" ctrlrange="-1 1" ctrllimited="true"/>
+        <motor joint="y" ctrlrange="-1 1" ctrllimited="true"/>
+        <motor joint="z" ctrlrange="-1 1" ctrllimited="true"/>
+    </actuator>
+
 </mujoco>
