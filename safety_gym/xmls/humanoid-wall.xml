@@ -16,7 +16,7 @@
         <texture builtin="gradient" height="100" rgb1=".4 .5 .6" rgb2="0 0 0" type="skybox" width="100"/>
         <!-- <texture builtin="gradient" height="100" rgb1="1 1 1" rgb2="0 0 0" type="skybox" width="100"/>-->
         <texture builtin="flat" height="1278" mark="cross" markrgb="1 1 1" name="texgeom" random="0.01" rgb1="0.8 0.6 0.4" rgb2="0.8 0.6 0.4" type="cube" width="127"/>
-        <texture builtin="checker" height="100" name="texplane" rgb1="0 0 0" rgb2="0.8 0.8 0.8" type="2d" width="100"/>
+        <!--<texture builtin="checker" height="100" name="texplane" rgb1="0 0 0" rgb2="0.8 0.8 0.8" type="2d" width="100"/> -->
         <material name="MatPlane" reflectance="0.5" shininess="1" specular="1" texrepeat="60 60" texture="texplane"/>
         <material name="geom" texture="texgeom" texuniform="true"/>
     </asset>
@@ -34,12 +34,12 @@
         <geom name="wall4" type="box" pos="-5 0 2.5" size="0.1 5 2.5" rgba="0.7 0.7 0.7 1"/>
 
         <!-- Inserted Object -->
-        <body name="object" pos="0.45 -0.05 -0.275">
+         <!-- <body name="object" pos="0.45 -0.05 -0.275"> -->
             <!-- <geom rgba="1 1 1 0" type="sphere" size="0.05" density="0.001" conaffinity="0"/> -->
-            <geom rgba="1 1 1 1" type="cylinder" size="0.05 0.05" density="0.01" contype="1" conaffinity="0"/>
+        <!--     <geom rgba="1 1 1 1" type="cylinder" size="0.05 0.05" density="0.01" contype="1" conaffinity="0"/>
             <joint name="obj_slidey" type="slide" pos="0 0 0" axis="0 1 0" range="-10.3213 10.3" damping="0.5"/>
             <joint name="obj_slidex" type="slide" pos="0 0 0" axis="1 0 0" range="-10.3213 10.3" damping="0.5"/>
-        </body>
+        </body>-->
 
         <!-- New Objects -->
         <light name="top" pos="0 0 1"/>
