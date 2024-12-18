@@ -2,12 +2,25 @@
     <compiler angle="degree" inertiafromgeom="true"/>
     <default>
         <joint armature="1" damping="1" limited="true"/>
-        <geom conaffinity="1" condim="1" contype="1" margin="0.001" material="geom" rgba="0.8 0.6 .4 1"/>
+        <geom conaffinity="0" condim="3" contype="0" material="geom" rgba="0.4 0.33 0.26 1.0"/>
         <motor ctrllimited="true" ctrlrange="-.4 .4"/>
     </default>
-    <option integrator="RK4" iterations="50" solver="PGS" timestep="0.003">
-        <!-- <flags solverstat="enable" energy="enable"/>-->
-    </option>
+    <!-- Removed RK4 integrator for brax. -->
+    <option iterations="8" timestep="0.003"/>
+    <custom>
+        <!-- brax custom params -->
+        <numeric data="2500" name="constraint_limit_stiffness"/>
+        <numeric data="27000" name="constraint_stiffness"/>
+        <numeric data="30" name="constraint_ang_damping"/>
+        <numeric data="80" name="constraint_vel_damping"/>
+        <numeric data="-0.05" name="ang_damping"/>
+        <numeric data="0.5" name="joint_scale_pos"/>
+        <numeric data="0.1" name="joint_scale_ang"/>
+        <numeric data="0" name="spring_mass_scale"/>
+        <numeric data="1" name="spring_inertia_scale"/>
+        <numeric data="20" name="matrix_inv_iterations"/>
+        <numeric data="15" name="solver_maxls"/>
+    </custom>
     <size nkey="5" nuser_geom="1"/>
     <visual>
         <map fogend="5" fogstart="3"/>
@@ -21,36 +34,9 @@
         <material name="geom" texture="texgeom" texuniform="true"/>
     </asset>
     <worldbody>
-        <!-- Existing light -->
         <light cutoff="100" diffuse="1 1 1" dir="-0 0 -1.3" directional="true" exponent="1" pos="0 0 1.3" specular=".1 .1 .1"/>
-
-        <!-- New Floor -->
-        <geom name="floor" type="plane" pos="0 0 0" size="5 5 0.1" rgba="0.8 0.8 0.8 1"/>
-
-        <!-- Walls -->
-        <geom name="wall1" type="box" pos="0 5 2.5" size="5 0.1 2.5" rgba="0.7 0.7 0.7 1"/>
-        <geom name="wall2" type="box" pos="0 -5 2.5" size="5 0.1 2.5" rgba="0.7 0.7 0.7 1"/>
-        <geom name="wall3" type="box" pos="5 0 2.5" size="0.1 5 2.5" rgba="0.7 0.7 0.7 1"/>
-        <geom name="wall4" type="box" pos="-5 0 2.5" size="0.1 5 2.5" rgba="0.7 0.7 0.7 1"/>
-
-        <!-- Inserted Object -->
-        <body name="object" pos="0.45 -0.05 -0.275">
-            <!-- <geom rgba="1 1 1 0" type="sphere" size="0.05" density="0.001" conaffinity="0"/> -->
-            <geom rgba="1 1 1 1" type="cylinder" size="0.05 0.05" density="0.01" contype="1" conaffinity="0"/>
-            <joint name="obj_slidey" type="slide" pos="0 0 0" axis="0 1 0" range="-10.3213 10.3" damping="0.5"/>
-            <joint name="obj_slidex" type="slide" pos="0 0 0" axis="1 0 0" range="-10.3213 10.3" damping="0.5"/>
-        </body>
-
-        <!-- New Objects -->
-        <light name="top" pos="0 0 1"/>
-        <geom name="red_box" type="box" pos="1.2 0 .1" size=".15 .1 .1" rgba="1 0 0 1"/>
-        <geom name="green_sphere" type="sphere" pos=".5 .5 .3" size=".1" rgba="0 1 0 1"/>
-        <geom name="stem" type="cylinder" pos="0 0.2 .3" size="0.05 .08"/>
-        <camera name="fixed" pos="-0.01 -.6 .6" xyaxes="1 0 0 0 1 2"/>
-        <!-- Renamed the camera to avoid conflict -->
-        <camera name="track_new" pos="0 -.6 .3" xyaxes="1 0 0 0 1 2" mode="track"/>
-
-        <!-- Humanoid Model -->
+        <geom conaffinity="1" condim="3" friction="1 .1 .1" material="MatPlane" name="floor" pos="0 0 0" size="20 20 0.125" type="plane" rgba="0.5 0.5 0.5 1.0"/>
+        <!-- <geom condim="3" material="MatPlane" name="floor" pos="0 0 0" size="10 10 0.125" type="plane"/>-->
         <body name="torso" pos="0 0 1.4">
             <camera name="track" mode="trackcom" pos="0 -4 0" xyaxes="1 0 0 0 0 1"/>
             <joint armature="0" damping="0" limited="false" name="root" pos="0 0 0" stiffness="0" type="free"/>
@@ -64,7 +50,6 @@
                 <body name="pelvis" pos="0 0 -0.165" quat="1.000 0 -0.002 0">
                     <joint armature="0.02" axis="1 0 0" damping="5" name="abdomen_x" pos="0 0 0.1" range="-35 35" stiffness="10" type="hinge"/>
                     <geom fromto="-.02 -.07 0 -.02 .07 0" name="butt" size="0.09" type="capsule"/>
-                    <!-- Right Leg -->
                     <body name="right_thigh" pos="0 -0.1 -0.04">
                         <joint armature="0.01" axis="1 0 0" damping="5" name="right_hip_x" pos="0 0 0" range="-25 5" stiffness="10" type="hinge"/>
                         <joint armature="0.01" axis="0 0 1" damping="5" name="right_hip_z" pos="0 0 0" range="-60 35" stiffness="10" type="hinge"/>
@@ -74,11 +59,10 @@
                             <joint armature="0.0060" axis="0 -1 0" name="right_knee" pos="0 0 .02" range="-160 -2" type="hinge"/>
                             <geom fromto="0 0 0 0 0 -.3" name="right_shin1" size="0.049" type="capsule"/>
                             <body name="right_foot" pos="0 0 -0.45">
-                                <geom name="right_foot" pos="0 0 0.1" size="0.075" type="sphere" user="0"/>
+                                <geom contype="1" name="right_foot" pos="0 0 0.1" size="0.075" type="sphere" user="0"/>
                             </body>
                         </body>
                     </body>
-                    <!-- Left Leg -->
                     <body name="left_thigh" pos="0 0.1 -0.04">
                         <joint armature="0.01" axis="-1 0 0" damping="5" name="left_hip_x" pos="0 0 0" range="-25 5" stiffness="10" type="hinge"/>
                         <joint armature="0.01" axis="0 0 -1" damping="5" name="left_hip_z" pos="0 0 0" range="-60 35" stiffness="10" type="hinge"/>
@@ -88,13 +72,12 @@
                             <joint armature="0.0060" axis="0 -1 0" name="left_knee" pos="0 0 .02" range="-160 -2" stiffness="1" type="hinge"/>
                             <geom fromto="0 0 0 0 0 -.3" name="left_shin1" size="0.049" type="capsule"/>
                             <body name="left_foot" pos="0 0 -0.45">
-                                <geom name="left_foot" type="sphere" size="0.075" pos="0 0 0.1" user="0"/>
+                                <geom contype="1" name="left_foot" type="sphere" size="0.075" pos="0 0 0.1" user="0" />
                             </body>
                         </body>
                     </body>
                 </body>
             </body>
-            <!-- Right Arm -->
             <body name="right_upper_arm" pos="0 -0.17 0.06">
                 <joint armature="0.0068" axis="2 1 1" name="right_shoulder1" pos="0 0 0" range="-85 60" stiffness="1" type="hinge"/>
                 <joint armature="0.0051" axis="0 -1 1" name="right_shoulder2" pos="0 0 0" range="-85 60" stiffness="1" type="hinge"/>
@@ -103,11 +86,9 @@
                     <joint armature="0.0028" axis="0 -1 1" name="right_elbow" pos="0 0 0" range="-90 50" stiffness="0" type="hinge"/>
                     <geom fromto="0.01 0.01 0.01 .17 .17 .17" name="right_larm" size="0.031" type="capsule"/>
                     <geom name="right_hand" pos=".18 .18 .18" size="0.04" type="sphere"/>
-                                <!-- <camera pos="0 0 0"/> -->
-                    <camera name="Arm" mode="trackcom" pos="0 0 0" xyaxes="1 0 0 0 0 1"/>
+                    <camera pos="0 0 0"/>
                 </body>
             </body>
-            <!-- Left Arm -->
             <body name="left_upper_arm" pos="0 0.17 0.06">
                 <joint armature="0.0068" axis="2 -1 1" name="left_shoulder1" pos="0 0 0" range="-60 85" stiffness="1" type="hinge"/>
                 <joint armature="0.0051" axis="0 1 1" name="left_shoulder2" pos="0 0 0" range="-60 85" stiffness="1" type="hinge"/>
@@ -120,16 +101,7 @@
             </body>
         </body>
     </worldbody>
-    <tendon>
-        <fixed name="left_hipknee">
-            <joint coef="-1" joint="left_hip_y"/>
-            <joint coef="1" joint="left_knee"/>
-        </fixed>
-        <fixed name="right_hipknee">
-            <joint coef="-1" joint="right_hip_y"/>
-            <joint coef="1" joint="right_knee"/>
-        </fixed>
-    </tendon>
+
     <actuator>
         <motor gear="100" joint="abdomen_y" name="abdomen_y"/>
         <motor gear="100" joint="abdomen_z" name="abdomen_z"/>
