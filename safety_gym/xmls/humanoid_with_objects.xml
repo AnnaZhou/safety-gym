@@ -42,6 +42,7 @@
         <geom name="wall1" type="box" pos="0 5 2.5" size="30 0.1 2.5" rgba="0.7 0.7 0.7 1"/>
         <geom name="wall2" type="box" pos="0 -5 2.5" size="30 0.1 2.5" rgba="0.7 0.7 0.7 1"/>
         <!-- Inserted Object -->
+        <geom name="box" type="box" pos="5.0 5.0 .3" size=".8 .8 .8" rgba="0 0 1 1"/>
         <geom name="sphere" type="sphere" pos="5.0 5.0 .3" size=".8" rgba="0 1 0 1"/>
 
         <!-- <geom condim="3" material="MatPlane" name="floor" pos="0 0 0" size="10 10 0.125" type="plane"/>-->
