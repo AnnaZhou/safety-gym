@@ -1,5 +1,5 @@
 
-    <?xml version="1.0" ?>
+<?xml version="1.0" ?>
 <robot name="cube.urdf">
   <link name="baseLink">
     <contact>
@@ -14,22 +14,5 @@
        <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
     </inertial>
 
-    <visual>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <geometry>
-        <mesh filename="manipulation/assets/table/material_normalized.obj" scale="1 1 1"/>
-      </geometry>
-
-         <material name="texture">
-        <texture filename="manipulation/assets/table/material_0.png"/>
-      </material>
-    </visual>
-
-    <collision>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <geometry>
-             <mesh filename="manipulation/assets/table/material_normalized.obj" scale="1 1 1"/>
-      </geometry>
-    </collision>
   </link>
   </robot>
