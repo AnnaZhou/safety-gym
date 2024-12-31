@@ -16,18 +16,18 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="xmls/urdf/material_normalized.obj" scale="1 1 1"/>
+        <mesh filename="material_normalized.obj" scale="1 1 1"/>
       </geometry>
 
          <material name="texture">
-        <texture filename="xmls/urdf/material_0.png"/>
+        <texture filename="material_0.png"/>
       </material>
     </visual>
 
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-             <mesh filename="xmls/urdf/material_normalized.obj" scale="1 1 1"/>
+             <mesh filename="material_normalized.obj" scale="1 1 1"/>
       </geometry>
     </collision>
   </link>
