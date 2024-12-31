@@ -20,7 +20,7 @@
       </geometry>
 
          <material name="texture">
-        <texture filename="xmls/urdf/material_1.png"/>
+        <texture filename="xmls/urdf/material_0.png"/>
       </material>
     </visual>
 
