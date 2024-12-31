@@ -20,7 +20,7 @@
       </geometry>
 
          <material name="texture">
-        <texture filename="material_0.png"/>
+        <texture filename="material_1.png"/>
       </material>
     </visual>
 
