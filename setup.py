@@ -15,7 +15,7 @@ setup(
         'joblib~=1.4.2',
         'cloudpickle==3.1.0',
         #'mujoco_py==2.0.2.7',
-        'mujoco==3.2.6',
+        'mujoco==3.3.0', '#3.2.6',
         'numpy~=1.26.4',
         'xmltodict~=0.14.2',
     ],
